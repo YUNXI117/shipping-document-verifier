@@ -27,6 +27,19 @@ class Classification:
     reason: str
 
 
+@dataclass(frozen=True, slots=True)
+class ShipmentFields:
+    """The seven values compared between an SI and a draft BL."""
+
+    shipper: str | None = None
+    consignee: str | None = None
+    notify_party: str | None = None
+    port_of_loading: str | None = None
+    port_of_discharge: str | None = None
+    container_count: int | None = None
+    gross_weight_kg: int | None = None
+
+
 def parse_email(raw: object) -> EmailRecord:
     """Validate untrusted JSON and convert its `from` key to `from_`."""
     if not isinstance(raw, dict):

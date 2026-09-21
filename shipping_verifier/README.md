@@ -47,7 +47,13 @@ python -m unittest discover -s shipping_verifier -p "test_*.py" -v
 
 ### Later stages
 
-1. Extract and normalize fields, compare SI against BL, and preserve original values for review.
+### Stage 4: Structured field extraction
+
+`ShipmentFields` models the seven values compared between an SI and a draft BL. `extract_numeric_fields(text)` currently extracts `container_count` and `gross_weight_kg`, including common label variants and comma-formatted numbers. Missing values remain `None` so they can later trigger human review.
+
+### Later stages
+
+1. Extract and normalize the five text fields, then compare SI against BL while preserving original values for review.
 2. Add AI to classification or extraction, with explicit handling for uncertain results.
 3. Build a TypeScript review interface, deploy the application, and complete the documentation and demo.
 

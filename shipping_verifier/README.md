@@ -43,7 +43,7 @@ python -m unittest discover -s shipping_verifier -p "test_*.py" -v
 
 ### Stage 3: Attachment reading
 
-`read_attachment(data_dir, attachment)` provides one interface for all document formats. The first implementation supports `.txt` and rejects missing, unsafe, or unsupported paths explicitly. PDF, DOCX, and XLSX support will be added next.
+`read_attachment(data_dir, attachment)` provides one interface for `.txt`, `.pdf`, `.docx`, and `.xlsx` documents. It rejects missing, unsafe, unsupported, and empty attachments explicitly. Install the parsing libraries with `python -m pip install -r shipping_verifier/requirements.txt`.
 
 ### Later stages
 

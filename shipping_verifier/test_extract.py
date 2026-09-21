@@ -2,7 +2,7 @@
 
 import unittest
 
-from extract import extract_numeric_fields
+from extract import extract_fields, extract_numeric_fields
 
 
 class NumericFieldExtractionTests(unittest.TestCase):
@@ -50,6 +50,66 @@ Gross Weight (KG): N/A"""
 
         self.assertIsNone(fields.container_count)
         self.assertIsNone(fields.gross_weight_kg)
+
+
+class TextFieldExtractionTests(unittest.TestCase):
+    def test_extracts_multiline_parties_and_label_synonyms(self) -> None:
+        text = """Shipper/Exporter: Example Paper Ltd
+  1 Harbour Road; Singapore
+Consignee (Non-Negotiable): Buyer Ltd
+  2 Market Street; London
+Notify Party/Intermediate Consignee: Agent Ltd
+Load Port: SINGAPORE (SGSIN)
+POD: CALLAO, PERU (PECLL)
+Container Count: 2 x 40'HC
+Gross Wt (kgs): 42,000 KG"""
+
+        fields = extract_fields(text)
+
+        self.assertEqual(fields.shipper, "Example Paper Ltd\n1 Harbour Road; Singapore")
+        self.assertEqual(fields.consignee, "Buyer Ltd\n2 Market Street; London")
+        self.assertEqual(fields.notify_party, "Agent Ltd")
+        self.assertEqual(fields.port_of_loading, "SINGAPORE (SGSIN)")
+        self.assertEqual(fields.port_of_discharge, "CALLAO, PERU (PECLL)")
+
+    def test_extracts_label_only_pdf_layout(self) -> None:
+        text = """Shipper
+Example Paper Ltd
+1 Harbour Road
+Consignee
+Buyer Ltd
+Notify Party
+Agent Ltd
+POL
+SINGAPORE
+Port of Discharge (POD)
+CALLAO, PERU
+Ocean Vessel
+TEST VESSEL"""
+
+        fields = extract_fields(text)
+
+        self.assertEqual(fields.shipper, "Example Paper Ltd\n1 Harbour Road")
+        self.assertEqual(fields.port_of_loading, "SINGAPORE")
+        self.assertEqual(fields.port_of_discharge, "CALLAO, PERU")
+
+    def test_preserves_pipe_delimited_spreadsheet_value(self) -> None:
+        fields = extract_fields("Shipper/Exporter | Example Ltd | 1 Harbour Road")
+        self.assertEqual(fields.shipper, "Example Ltd | 1 Harbour Road")
+
+    def test_treats_to_the_order_of_as_consignee(self) -> None:
+        fields = extract_fields("To the Order of: Example Buyer Ltd")
+        self.assertEqual(fields.consignee, "Example Buyer Ltd")
+
+    def test_returns_none_for_missing_text_value(self) -> None:
+        fields = extract_fields("""Shipper: ____
+Consignee: Buyer Ltd
+Port of Loading: TBA
+POD: ???""")
+
+        self.assertIsNone(fields.shipper)
+        self.assertIsNone(fields.port_of_loading)
+        self.assertIsNone(fields.port_of_discharge)
 
 
 if __name__ == "__main__":

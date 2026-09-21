@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+
+# JetBrains IDEs
+.idea/
+*.iml
+
+# Hackathon datasets and organizer materials
+hac/
+sdoc-hackathon-docker/
+*.zip
+Shipping Document Verification Use Case.pdf
+
+# Generated output and secrets
+.env
+.env.*
+!.env.example
+submission.json
+output/

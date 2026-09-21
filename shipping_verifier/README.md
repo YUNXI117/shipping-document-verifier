@@ -41,9 +41,14 @@ python -m unittest discover -s shipping_verifier -p "test_*.py" -v
 
 ## Next stages
 
-1. Add attachment readers for `.txt`, `.pdf`, `.docx`, and `.xlsx`.
-2. Extract and normalize fields, compare SI against BL, and preserve original values for review.
-3. Add AI to classification or extraction, with explicit handling for uncertain results.
-4. Build a TypeScript review interface, deploy the application, and complete the documentation and demo.
+### Stage 3: Attachment reading
+
+`read_attachment(data_dir, attachment)` provides one interface for all document formats. The first implementation supports `.txt` and rejects missing, unsafe, or unsupported paths explicitly. PDF, DOCX, and XLSX support will be added next.
+
+### Later stages
+
+1. Extract and normalize fields, compare SI against BL, and preserve original values for review.
+2. Add AI to classification or extraction, with explicit handling for uncertain results.
+3. Build a TypeScript review interface, deploy the application, and complete the documentation and demo.
 
 The supplied event material lists the preliminary submission deadline as **22 September 2026 at 12:00 PM**. Confirm the latest information on the event website before submission.

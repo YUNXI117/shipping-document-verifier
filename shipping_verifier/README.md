@@ -53,7 +53,13 @@ python -m unittest discover -s shipping_verifier -p "test_*.py" -v
 
 ### Later stages
 
-1. Normalize extracted values, then compare SI against BL while preserving original values for review.
+### Stage 5: Normalize and compare
+
+`compare_fields(si, bl)` treats the SI as the reference, normalizes harmless formatting differences, and returns `OK`, `MISMATCH`, or `NEEDS_REVIEW`. Mismatches retain both original values for a side-by-side review. Any missing comparison value produces `NEEDS_REVIEW` instead of a guessed mismatch.
+
+### Later stages
+
+1. Connect classification, attachment reading, extraction, and comparison into one end-to-end pipeline.
 2. Add AI to classification or extraction, with explicit handling for uncertain results.
 3. Build a TypeScript review interface, deploy the application, and complete the documentation and demo.
 

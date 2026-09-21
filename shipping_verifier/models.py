@@ -21,6 +21,19 @@ class Category(StrEnum):
     SPAM = "SPAM"
 
 
+class ComparisonStatus(StrEnum):
+    OK = "OK"
+    MISMATCH = "MISMATCH"
+    NEEDS_REVIEW = "NEEDS_REVIEW"
+
+
+class ReviewReason(StrEnum):
+    WRONG_DOC_TYPE = "wrong_doc_type"
+    MISSING_ATTACHMENT = "missing_attachment"
+    UNREADABLE = "unreadable"
+    MISSING_VALUE = "missing_value"
+
+
 @dataclass(frozen=True, slots=True)
 class Classification:
     category: Category
@@ -38,6 +51,20 @@ class ShipmentFields:
     port_of_discharge: str | None = None
     container_count: int | None = None
     gross_weight_kg: int | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class FieldMismatch:
+    field: str
+    si_value: str | int
+    bl_value: str | int
+
+
+@dataclass(frozen=True, slots=True)
+class ComparisonResult:
+    status: ComparisonStatus
+    mismatches: tuple[FieldMismatch, ...] = ()
+    review_reason: ReviewReason | None = None
 
 
 def parse_email(raw: object) -> EmailRecord:
